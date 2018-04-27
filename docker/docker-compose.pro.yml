@@ -1,0 +1,167 @@
+version: "3"
+
+services:
+  tika_server:
+    # build:
+    #   context: tika-server/
+    image: logicalspark/docker-tikaserver:latest
+    environment:
+      - VIRTUAL_HOST=tika # this is nginx host name
+      - VIRTUAL_PORT=9998
+    restart: on-failure
+
+  redis:
+    image: redis:4.0.8
+    container_name: redis-server
+     # command: ["redis-server", "--appendonly", "yes"]
+   #volumes:
+   #   - redis-data:/data
+    ports:
+      - 6379:6379
+    restart: on-failure
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.1.2
+    container_name: elasticsearch
+    environment:
+      - ELASTIC_PASSWORD=password123
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - xpack.monitoring.enabled=true
+      - xpack.ml.enabled=false
+      - xpack.graph.enabled=false
+      - xpack.watcher.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    volumes:
+      - "esdata:/usr/share/elasticsearch/data"
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    restart: on-failure
+
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:6.1.2
+    container_name: kibana
+    environment:
+      - elasticsearch.url= http://elasticsearch:9200
+      - xpack.monitoring.ui.container.elasticsearch.enabled=true
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+    #command: ["./wait-for-it.sh", "elasticsearch:9200", "-t 0"]
+
+  postgres:
+    image: postgres:alpine
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=nlp
+      - POSTGRES_PASSWORD=password123
+    volumes:
+      - "pgdata:/var/lib/postgresql/data"
+    ports:
+      - "5432:5432"
+    restart: on-failure
+
+  ftp_server:
+    image: nlp-ftp-server
+    build:
+      context: ./ftpserver/
+      args:
+         - USERID=nlp
+         - PASSWORD=password123
+    container_name: ftpserver
+    volumes:
+      - "ftpdata:/home/ftpusers"
+    environment:
+      - PUBLICHOST=${host_ip}
+    ports:
+      - "21:21"
+      - "30000-30009:30000-30009"
+    restart: on-failure
+
+  medgate-service:
+    image: jeffreypeng/medgate-dev:latest
+    container_name: medgate-service
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - http_proxy=${http_proxy}
+      - https_proxy=${https_proxy}
+      - no_proxy=${no_proxy}
+      - host_ip=${host_ip}
+    volumes:
+      - "ftpdata:/data"
+      - "/gcp:/gcp"
+    ports:
+      - "80:80"
+    depends_on:
+      - postgres
+    restart: on-failure
+
+  load_balancer:
+    image: jwilder/nginx-proxy:alpine
+    container_name: tika-lb  # this doesn't really matter
+    ports:
+      - "8008:80"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro # "//var/run/docker.sock" for windows, "/var/run/docker.sock" for linux
+    restart: on-failure
+
+  
+  filebeat:
+    build: ./filebeat/
+    container_name: filebeat
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock # "//var/run/docker.sock" for windows, "/var/run/docker.sock" for linux
+      - /var/lib/docker/containers/:/var/log/monitor/docker/
+    restart: on-failure
+    depends_on:
+      - elasticsearch
+
+
+  metricbeat:
+    build: ./metricbeat/
+    container_name: metricbeat
+    restart: unless-stopped
+    volumes:
+      - /proc:/hostfs/proc:ro
+      - /sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro
+      - /:/hostfs:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - elasticsearch
+    command:
+      - "-system.hostfs=/hostfs"
+
+  gcp_8.4.1:
+    image: jeffreypeng/gcp
+    container_name: gcp_8.4.1
+    volumes:      
+      - "/gcp/instances/gcp_1:/control"
+      - "/gcp/data:/control/data"
+      - "/gcp/output:/control/output"
+      - "/gcp/applications:/control/application"
+    depends_on:
+      - medgate-service
+    command: ["-d","/control"]
+      #- "C:/tmp/inbound:/home/ftpusers/NRDAInbound"
+      #- data-volume:/home/ftpusers/NRDAInbound      
+    restart: on-failure
+  
+  nrdagateway:
+    image: jeffreypeng/nrdagateway-dev:latest
+    ports:
+      - "88:80"
+    restart: on-failure
+
+  pgadmin:
+    image: fenglc/pgadmin4
+    ports:
+      - "5050:5050"
+    restart: on-failure
+
+volumes:
+  esdata:
+  pgdata:
+  ftpdata:

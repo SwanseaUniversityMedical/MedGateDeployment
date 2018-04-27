@@ -1,0 +1,18 @@
+filebeat.prospectors:
+- input_type: log
+  paths:
+    - /var/log/monitor/docker/*/*.log
+  type: log
+  document_type: syslog
+output.elasticsearch:
+  hosts: ["http://elasticsearch:9200"]
+  index: "filebeat-%{[beat.version]}-%{+yyyy.MM.dd}"
+
+setup:
+  template:
+    name: "filebeat"
+    pattern: "filebeat-*"
+  dashboards:
+    index: "filebeat-*" 
+  kibana:
+    host: "http://kibana:5601"
