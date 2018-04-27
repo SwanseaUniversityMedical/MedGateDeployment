@@ -1,0 +1,1 @@
+docker-compose -f ~/MedGateDeployment/docker/docker-compose.yml rm

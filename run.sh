@@ -12,7 +12,6 @@ mkdir -p /gcp/applications
 mkdir -p /gcp/data
 mkdir -p /gcp/output
 
-cd ~/MedGateDeployment/docker
 
 #remove medgate-service container and pull the latest medgate-service image 
 if [ "$(docker ps -aq -f name='medgate-service')" ]; then
@@ -22,7 +21,7 @@ if [ "$(docker ps -aq -f name='medgate-service')" ]; then
     docker-compose pull medgate-service
 fi
 
-docker-compose up --build -d
+docker-compose -f ~/MedGateDeployment/docker/docker-compose.yml up --build -d
 docker ps
 
-cd ~/MedGateDeployment
+
