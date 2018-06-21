@@ -63,21 +63,18 @@ services:
     restart: on-failure
 
   ftp_server:
-    image: nlp-ftp-server
+    image: fauria/vsftpd
     env_file: ../medgate.config
-    build:
-      context: ./ftpserver/
-      args:
-         - USERID=${FTP_USER}
-         - PASSWORD=${FTP_PASSWORD}
     container_name: ftpserver
     volumes:
-      - "ftpdata:/home/ftpusers"
+      - "ftpdata:/home/vsftpd"
     environment:
-      - PUBLICHOST=${host_ip}
+      - PASV_ADDRESS=${host_ip}
+      - PASV_MIN_PORT=21100
+      - PASV_MAX_PORT=21110
     ports:
       - "21:21"
-      - "30000-30009:30000-30009"
+      - "21100-21110:21100-21110"
     restart: on-failure
 
   medgate-service:
