@@ -23,15 +23,15 @@ services:
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.1.2
     container_name: elasticsearch
+    env_file: ../medgate.config
     environment:
-      - ELASTIC_PASSWORD=password123
       - discovery.type=single-node
       - xpack.security.enabled=false
       - xpack.monitoring.enabled=true
       - xpack.ml.enabled=false
       - xpack.graph.enabled=false
       - xpack.watcher.enabled=false
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
     volumes:
       - "esdata:/usr/share/elasticsearch/data"
     ports:
@@ -55,9 +55,7 @@ services:
   postgres:
     image: postgres:alpine
     container_name: postgres
-    environment:
-      - POSTGRES_USER=nlp
-      - POSTGRES_PASSWORD=password123
+    env_file: ../medgate.config
     volumes:
       - "pgdata:/var/lib/postgresql/data"
     ports:
@@ -65,30 +63,27 @@ services:
     restart: on-failure
 
   ftp_server:
-    image: nlp-ftp-server
-    build:
-      context: ./ftpserver/
-      args:
-         - USERID=nlp
-         - PASSWORD=password123
+    image: fauria/vsftpd
+    env_file: ../medgate.config
     container_name: ftpserver
     volumes:
-      - "ftpdata:/home/ftpusers"
+      - "ftpdata:/home/vsftpd"
     environment:
-      - PUBLICHOST=${host_ip}
+      - PASV_ADDRESS=${host_ip}
+      - PASV_MIN_PORT=21100
+      - PASV_MAX_PORT=21110
     ports:
       - "21:21"
-      - "30000-30009:30000-30009"
+      - "21100-21110:21100-21110"
     restart: on-failure
 
   medgate-service:
     image: swanseauniversitymedical/medgate-dev:latest
     container_name: medgate-service
+    env_file: ../medgate.config
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - http_proxy=${http_proxy}
-      - https_proxy=${https_proxy}
-      - no_proxy=${no_proxy}
+      - no_proxy=vault,localhost,elasticsearch,tika-lb,postgres,127.0.0.0/8,192.0.0.0/8,172.18.0.0/8
       - host_ip=${host_ip}
     volumes:
       - "ftpdata:/data"
@@ -101,7 +96,7 @@ services:
 
   load_balancer:
     image: jwilder/nginx-proxy:alpine
-    container_name: tika-lb  # this doesn't really matter
+    container_name: tika-lb
     ports:
       - "8008:80"
     volumes:
