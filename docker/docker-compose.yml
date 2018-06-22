@@ -82,7 +82,7 @@ services:
     restart: on-failure
 
   medgate-service:
-    image: jeffreypeng/medgate-dev:latest
+    image: swanseauniversitymedical/medgate-dev:latest
     container_name: medgate-service
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
@@ -135,7 +135,7 @@ services:
       - "-system.hostfs=/hostfs"
 
   gcp_8.4.1:
-    image: jeffreypeng/gcp
+    image: swanseauniversitymedical/gcp
     container_name: gcp_8.4.1
     volumes:      
       - "/gcp/instances/gcp_1:/control"
@@ -150,7 +150,7 @@ services:
     restart: on-failure
   
   nrdagateway:
-    image: jeffreypeng/nrdagateway-dev:latest
+    image: swanseauniversitymedical/nrdagateway-dev:latest
     ports:
       - "88:80"
     restart: on-failure
