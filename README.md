@@ -12,14 +12,13 @@ run as server `install.sh`
 
 stop server `stop.sh`
 
-
 ### Kibana
 
-http://192.168.69.5:5601
+http://youIP:5601
 
 ### Elasticsearch
 
-http://192.168.69.5:9200
+http://youIP:9200
 
 ## Note
 
