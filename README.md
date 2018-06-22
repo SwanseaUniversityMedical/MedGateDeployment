@@ -2,7 +2,7 @@
 
 ## Get Started
 
-Set credentials in `medgate.config`
+Set credentials for PostgreSQL, FTP, WebDAV and ElasticSearch in `medgate.config` as well as the proxy.
 
 If docker is not installed run `installdocker.sh`
 
@@ -12,17 +12,6 @@ run as server `install.sh`
 
 stop server `stop.sh`
 
-### FTP
-
-FTP Access (will need to be configured dynamically)
-
-for PASV mode need to state PUBLICHOST - currently staticly set
-
-ftp 192.168.69.5
-
-username: nlp
-
-password: password123
 
 ### Kibana
 
