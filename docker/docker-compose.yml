@@ -1,7 +1,7 @@
 version: "3"
 
 services:
-  tika_server:
+  tika:
     image: logicalspark/docker-tikaserver:latest
     ports:
       - "9998:9998"
@@ -80,7 +80,7 @@ services:
     env_file: ../medgate.config
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - no_proxy=vault,localhost,elasticsearch,tika-lb,postgres,127.0.0.0/8,192.0.0.0/8,172.18.0.0/8
+      - no_proxy=vault,localhost,elasticsearch,tika,postgres,127.0.0.0/8,192.0.0.0/8,172.18.0.0/8
       - host_ip=${host_ip}
     volumes:
       - "ftpdata:/data"
