@@ -2,12 +2,9 @@ version: "3"
 
 services:
   tika_server:
-    # build:
-    #   context: tika-server/
     image: logicalspark/docker-tikaserver:latest
-    environment:
-      - VIRTUAL_HOST=tika # this is nginx host name
-      - VIRTUAL_PORT=9998
+    ports:
+      - "9998:9998"
     restart: on-failure
 
   redis:
@@ -92,15 +89,6 @@ services:
       - "80:80"
     depends_on:
       - postgres
-    restart: on-failure
-
-  load_balancer:
-    image: jwilder/nginx-proxy:alpine
-    container_name: tika-lb
-    ports:
-      - "8008:80"
-    volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro # "//var/run/docker.sock" for windows, "/var/run/docker.sock" for linux
     restart: on-failure
 
   
