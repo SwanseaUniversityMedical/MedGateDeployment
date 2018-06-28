@@ -23,13 +23,13 @@ mkdir -p /gcp/applications
 mkdir -p /gcp/data
 mkdir -p /gcp/output
 
-echo '==> Pulling containers for MedGATE services'
+echo '==> Pulling latest image for MedGATE services'
 #remove medgate-service container and pull the latest medgate-service image 
 if [ "$(docker ps -aq -f name='medgate-service')" ]; then
-    # cleanup
-    # ?? pull should update - so why delete, docker-compose rm -f medgate-service
-    # pull the latest image
-    docker-compose pull medgate-service
+    # remove existing medgate-service container
+    docker rm -f medgate-service
+    # pull the latest medgate-service image
+    docker pull medgate-service
 fi
 
 echo '==> Building Docker Images'
@@ -38,5 +38,3 @@ docker-compose -f ~/MedGateDeployment/docker/docker-compose.yml up --build -d
 clear
 echo '==> Running Docker Images'
 docker ps
-
-
