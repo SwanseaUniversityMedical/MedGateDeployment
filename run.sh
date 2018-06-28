@@ -29,7 +29,7 @@ if [ "$(docker ps -aq -f name='medgate-service')" ]; then
     # remove existing medgate-service container
     docker rm -f medgate-service
     # pull the latest medgate-service image
-    docker pull medgate-service
+    docker pull swanseauniversitymedical/medgate-dev:latest
 fi
 
 echo '==> Building Docker Images'
