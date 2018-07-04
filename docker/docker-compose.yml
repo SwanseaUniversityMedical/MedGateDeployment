@@ -11,47 +11,70 @@ services:
     image: redis:4.0.8
     container_name: redis-server
      # command: ["redis-server", "--appendonly", "yes"]
-   #volumes:
-   #   - redis-data:/data
+    volumes:
+      - "redisdata:/usr/share/redis/data"
     ports:
       - 6379:6379
     restart: on-failure
 
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.1.2
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.3.0
     container_name: elasticsearch
     env_file: ../medgate.config
     environment:
-      - discovery.type=single-node
+#      - discovery.type=single-node
+      - cluster.name=docker-cluster
       - xpack.security.enabled=false
       - xpack.monitoring.enabled=true
       - xpack.ml.enabled=false
       - xpack.graph.enabled=false
       - xpack.watcher.enabled=false
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
       - bootstrap.memory_lock=true
-      - ES_JAVA_OPTS=-Xms1g -Xmx1g
     ulimits:
       memlock:
         soft: -1
         hard: -1
     volumes:
       - "esdata:/usr/share/elasticsearch/data"
+    networks:
+      - esnet
     ports:
       - "9200:9200"
       - "9300:9300"
     restart: on-failure
 
+  elasticsearch2:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.3.0
+    container_name: elasticsearch2
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "discovery.zen.ping.unicast.hosts=elasticsearch"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - esdata2:/usr/share/elasticsearch/data
+    networks:
+      - esnet
+    restart: on-failure
 
   kibana:
-    image: docker.elastic.co/kibana/kibana:6.1.2
+    image: docker.elastic.co/kibana/kibana:6.3.0
     container_name: kibana
     environment:
       - elasticsearch.url= http://elasticsearch:9200
       - xpack.monitoring.ui.container.elasticsearch.enabled=true
+    networks:
+      - esnet
     ports:
       - "5601:5601"
     depends_on:
       - elasticsearch
+      - elasticsearch2
     #command: ["./wait-for-it.sh", "elasticsearch:9200", "-t 0"]
 
   postgres:
@@ -90,13 +113,17 @@ services:
     volumes:
       - "ftpdata:/data"
       - "/gcp:/gcp"
+    networks:
+      - esnet
     ports:
       - "80:80"
     depends_on:
       - postgres
+      - elasticsearch
+      - elasticsearch2
     restart: on-failure
 
-  
+
   filebeat:
     build: ./filebeat/
     container_name: filebeat
@@ -104,8 +131,11 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock # "//var/run/docker.sock" for windows, "/var/run/docker.sock" for linux
       - /var/lib/docker/containers/:/var/log/monitor/docker/
     restart: on-failure
+    networks:
+      - esnet
     depends_on:
       - elasticsearch
+      - elasticsearch2
 
 
   metricbeat:
@@ -117,15 +147,18 @@ services:
       - /sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro
       - /:/hostfs:ro
       - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - esnet
     depends_on:
       - elasticsearch
+      - elasticsearch2
     command:
       - "-system.hostfs=/hostfs"
 
   gcp_8.4.1:
     image: swanseauniversitymedical/gcp
     container_name: gcp_8.4.1
-    volumes:      
+    volumes:
       - "/gcp/instances/gcp_1:/control"
       - "/gcp/data:/control/data"
       - "/gcp/output:/control/output"
@@ -134,9 +167,9 @@ services:
       - medgate-service
     command: ["-d","/control"]
       #- "C:/tmp/inbound:/home/ftpusers/NRDAInbound"
-      #- data-volume:/home/ftpusers/NRDAInbound      
+      #- data-volume:/home/ftpusers/NRDAInbound
     restart: on-failure
-  
+
   nrdagateway:
     image: swanseauniversitymedical/nrdagateway-dev:latest
     ports:
@@ -147,9 +180,17 @@ services:
     image: fenglc/pgadmin4
     ports:
       - "5050:5050"
+    depends_on:
+      - postgres
     restart: on-failure
 
 volumes:
   esdata:
+  esdata2:
   pgdata:
   ftpdata:
+  redisdata:
+
+networks:
+  esnet:
+    #driver: custom-driver-1
