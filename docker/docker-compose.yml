@@ -5,6 +5,8 @@ services:
     image: logicalspark/docker-tikaserver:latest
     ports:
       - "9998:9998"
+    networks:
+      - backend
     restart: on-failure
 
   redis:
@@ -13,6 +15,8 @@ services:
     command: ["redis-server", "--appendonly", "yes"]
     volumes:
       - "redisdata:/usr/share/redis/data"
+    networks:
+      - backend
     ports:
       - 6379:6379
     restart: on-failure
@@ -83,6 +87,8 @@ services:
     env_file: ../medgate.config
     volumes:
       - "pgdata:/var/lib/postgresql/data"
+    networks:
+      - backend
     ports:
       - "5432:5432"
     restart: on-failure
@@ -115,6 +121,7 @@ services:
       - "/gcp:/gcp"
     networks:
       - esnet
+      - backend
     ports:
       - "80:80"
     depends_on:
@@ -193,4 +200,5 @@ volumes:
 
 networks:
   esnet:
+  backend:
     #driver: custom-driver-1
