@@ -142,7 +142,7 @@ services:
 #      - esnet
     depends_on:
       - elasticsearch
-      - elasticsearch2
+#      - elasticsearch2
 
 
   metricbeat:
