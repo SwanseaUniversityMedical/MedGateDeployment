@@ -30,6 +30,7 @@ services:
 #      - cluster.name=docker-cluster
       - xpack.security.enabled=false
       - xpack.monitoring.enabled=true
+      - xpack.monitoring.collection.enabled=true
       - xpack.ml.enabled=false
       - xpack.graph.enabled=false
       - xpack.watcher.enabled=false
