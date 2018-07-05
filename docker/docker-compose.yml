@@ -22,7 +22,7 @@ services:
     restart: on-failure
 
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.3.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.1.4
     container_name: elasticsearch
     env_file: ../medgate.config
     environment:
@@ -30,7 +30,7 @@ services:
       - cluster.name=docker-cluster
       - xpack.security.enabled=false
       - xpack.monitoring.enabled=true
-      - xpack.monitoring.collection.enabled=true
+#      - xpack.monitoring.collection.enabled=true
       - xpack.ml.enabled=false
       - xpack.graph.enabled=false
       - xpack.watcher.enabled=false
@@ -50,7 +50,7 @@ services:
     restart: on-failure
 
   elasticsearch2:
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.3.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.1.4
     container_name: elasticsearch2
     environment:
       - cluster.name=docker-cluster
@@ -68,7 +68,7 @@ services:
     restart: on-failure
 
   kibana:
-    image: docker.elastic.co/kibana/kibana:6.3.0
+    image: docker.elastic.co/kibana/kibana:6.1.4
     container_name: kibana
     environment:
       - elasticsearch.url= http://elasticsearch:9200
