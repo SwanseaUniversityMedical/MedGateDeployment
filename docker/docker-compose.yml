@@ -115,7 +115,8 @@ services:
     env_file: ../medgate.config
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - no_proxy=vault,localhost,elasticsearch,tika,postgres,127.0.0.0/8,192.0.0.0/8,172.18.0.0/8
+      - no_proxy=vault,localhost,elasticsearch,tika,postgres,192.168.69.5
+      # - no_proxy=vault,localhost,elasticsearch,tika,postgres,127.0.0.0/8,192.0.0.0/8,172.18.0.0/16 #CIDR notation is not supported by curl (.net core SocketsHttpHandler relies on curl under unix)
       - host_ip=${host_ip}
     volumes:
       - "ftpdata:/data"
