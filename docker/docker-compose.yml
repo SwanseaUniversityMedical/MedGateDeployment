@@ -5,8 +5,8 @@ services:
     image: logicalspark/docker-tikaserver:latest
     ports:
       - "9998:9998"
-#    networks:
-#      - backend
+    networks:
+      - esnet
     restart: on-failure
 
   redis:
@@ -15,8 +15,8 @@ services:
     command: ["redis-server", "--appendonly", "yes"]
     volumes:
       - "redisdata:/usr/share/redis/data"
-#    networks:
-#      - backend
+    networks:
+      - esnet
     ports:
       - 6379:6379
     restart: on-failure
@@ -26,8 +26,8 @@ services:
     container_name: elasticsearch
     env_file: ../medgate.config
     environment:
-      - discovery.type=single-node
-#      - cluster.name=docker-cluster
+#      - discovery.type=single-node
+      - cluster.name=docker-cluster
       - xpack.security.enabled=false
       - xpack.monitoring.enabled=true
       - xpack.monitoring.collection.enabled=true
@@ -42,30 +42,30 @@ services:
         hard: -1
     volumes:
       - "esdata:/usr/share/elasticsearch/data"
-#    networks:
-#      - esnet
+    networks:
+      - esnet
     ports:
       - "9200:9200"
       - "9300:9300"
     restart: on-failure
 
-#  elasticsearch2:
-#    image: docker.elastic.co/elasticsearch/elasticsearch:6.3.0
-#    container_name: elasticsearch2
-#    environment:
-#      - cluster.name=docker-cluster
-#      - bootstrap.memory_lock=true
-#      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-#      - "discovery.zen.ping.unicast.hosts=elasticsearch"
-#    ulimits:
-#      memlock:
-#        soft: -1
-#        hard: -1
-#    volumes:
-#      - esdata2:/usr/share/elasticsearch/data
-#    networks:
-#      - esnet
-#    restart: on-failure
+  elasticsearch2:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.3.0
+    container_name: elasticsearch2
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "discovery.zen.ping.unicast.hosts=elasticsearch"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - esdata2:/usr/share/elasticsearch/data
+    networks:
+      - esnet
+    restart: on-failure
 
   kibana:
     image: docker.elastic.co/kibana/kibana:6.3.0
@@ -73,13 +73,13 @@ services:
     environment:
       - elasticsearch.url= http://elasticsearch:9200
       - xpack.monitoring.ui.container.elasticsearch.enabled=true
-#    networks:
-#      - esnet
+    networks:
+      - esnet
     ports:
       - "5601:5601"
     depends_on:
       - elasticsearch
-#      - elasticsearch2
+      - elasticsearch2
     #command: ["./wait-for-it.sh", "elasticsearch:9200", "-t 0"]
 
   postgres:
@@ -88,8 +88,8 @@ services:
     env_file: ../medgate.config
     volumes:
       - "pgdata:/var/lib/postgresql/data"
-#    networks:
-#      - backend
+    networks:
+      - esnet
     ports:
       - "5432:5432"
     restart: on-failure
@@ -120,15 +120,14 @@ services:
     volumes:
       - "ftpdata:/data"
       - "/gcp:/gcp"
-#    networks:
-#      - esnet
-#      - backend
+    networks:
+      - esnet
     ports:
       - "80:80"
     depends_on:
       - postgres
       - elasticsearch
-#      - elasticsearch2
+      - elasticsearch2
     restart: on-failure
 
 
@@ -139,11 +138,11 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock # "//var/run/docker.sock" for windows, "/var/run/docker.sock" for linux
       - /var/lib/docker/containers/:/var/log/monitor/docker/
     restart: on-failure
-#    networks:
-#      - esnet
+    networks:
+      - esnet
     depends_on:
       - elasticsearch
-#      - elasticsearch2
+      - elasticsearch2
 
 
   metricbeat:
@@ -155,11 +154,11 @@ services:
       - /sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro
       - /:/hostfs:ro
       - /var/run/docker.sock:/var/run/docker.sock
-#    networks:
-#      - esnet
+    networks:
+      - esnet
     depends_on:
       - elasticsearch
-#      - elasticsearch2
+      - elasticsearch2
     command:
       - "-system.hostfs=/hostfs"
 
@@ -201,5 +200,4 @@ volumes:
 
 networks:
   esnet:
-  backend:
     #driver: custom-driver-1
