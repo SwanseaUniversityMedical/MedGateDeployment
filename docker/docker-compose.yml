@@ -12,9 +12,9 @@ services:
   redis:
     image: redis:4.0.8
     container_name: redis-server
-    command: ["redis-server", "--appendonly", "yes"]
-    volumes:
-      - "redisdata:/usr/share/redis/data"
+#    command: ["redis-server", "--appendonly", "yes"]
+#    volumes:
+#      - "redisdata:/usr/share/redis/data"
     networks:
       - esnet
     ports:
@@ -26,15 +26,15 @@ services:
     container_name: elasticsearch
     env_file: ../medgate.config
     environment:
-#      - discovery.type=single-node
-      - cluster.name=docker-cluster
+      - discovery.type=single-node
+#      - cluster.name=docker-cluster
       - xpack.security.enabled=false
       - xpack.monitoring.enabled=true
 #      - xpack.monitoring.collection.enabled=true
       - xpack.ml.enabled=false
       - xpack.graph.enabled=false
       - xpack.watcher.enabled=false
-      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - ES_JAVA_OPTS=-Xms26g -Xmx26g
       - bootstrap.memory_lock=true
     ulimits:
       memlock:
@@ -49,23 +49,23 @@ services:
       - "9300:9300"
     restart: on-failure
 
-  elasticsearch2:
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.1.4
-    container_name: elasticsearch2
-    environment:
-      - cluster.name=docker-cluster
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-      - "discovery.zen.ping.unicast.hosts=elasticsearch"
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    volumes:
-      - esdata2:/usr/share/elasticsearch/data
-    networks:
-      - esnet
-    restart: on-failure
+  # elasticsearch2:
+  #   image: docker.elastic.co/elasticsearch/elasticsearch:6.1.4
+  #   container_name: elasticsearch2
+  #   environment:
+  #     - cluster.name=docker-cluster
+  #     - bootstrap.memory_lock=true
+  #     - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+  #     - "discovery.zen.ping.unicast.hosts=elasticsearch"
+  #   ulimits:
+  #     memlock:
+  #       soft: -1
+  #       hard: -1
+  #   volumes:
+  #     - esdata2:/usr/share/elasticsearch/data
+  #   networks:
+  #     - esnet
+  #   restart: on-failure
 
   kibana:
     image: docker.elastic.co/kibana/kibana:6.1.4
@@ -79,7 +79,7 @@ services:
       - "5601:5601"
     depends_on:
       - elasticsearch
-      - elasticsearch2
+#      - elasticsearch2
     #command: ["./wait-for-it.sh", "elasticsearch:9200", "-t 0"]
 
   postgres:
@@ -115,7 +115,7 @@ services:
     env_file: ../medgate.config
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - no_proxy=vault,localhost,elasticsearch,tika,postgres,192.168.69.5
+      - no_proxy=vault,localhost,elasticsearch,tika,postgres
       # - no_proxy=vault,localhost,elasticsearch,tika,postgres,127.0.0.0/8,192.0.0.0/8,172.18.0.0/16 #CIDR notation is not supported by curl (.net core SocketsHttpHandler relies on curl under unix)
       - host_ip=${host_ip}
     volumes:
@@ -128,7 +128,7 @@ services:
     depends_on:
       - postgres
       - elasticsearch
-      - elasticsearch2
+#      - elasticsearch2
     restart: on-failure
 
 
@@ -143,7 +143,7 @@ services:
       - esnet
     depends_on:
       - elasticsearch
-      - elasticsearch2
+#      - elasticsearch2
 
 
   metricbeat:
@@ -159,7 +159,7 @@ services:
       - esnet
     depends_on:
       - elasticsearch
-      - elasticsearch2
+#      - elasticsearch2
     command:
       - "-system.hostfs=/hostfs"
 
@@ -173,7 +173,7 @@ services:
       - "/gcp/applications:/control/application"
     depends_on:
       - medgate-service
-    command: ["-d","/control"]
+    command: ["-t","4","-m","20G","-d","/control"]
       #- "C:/tmp/inbound:/home/ftpusers/NRDAInbound"
       #- data-volume:/home/ftpusers/NRDAInbound
     restart: on-failure
@@ -194,10 +194,10 @@ services:
 
 volumes:
   esdata:
-  esdata2:
+#  esdata2:
   pgdata:
   ftpdata:
-  redisdata:
+#  redisdata:
 
 networks:
   esnet:
