@@ -11,12 +11,14 @@ export host_ip=$(ip address | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep
 
 # stop all the running services
 echo '==> Stopping any running MedGATE services'
-if [[ -s ~/MedGateDeployment/docker/docker-compose.yml ]]
-then
-    docker-compose -f ~/MedGateDeployment/docker/docker-compose.yml stop
-fi
+docker-compose -f ~/MedGateDeployment/docker/docker-compose.yml stop
 
 echo '==> Configuring enviroment'
+# create medgate related directories for initialization 
+mkdir -p /medgate/ingress
+mkdir -p /medgate/archive
+mkdir -p /medgate/hl7
+
 # create gcp related directories for initialization 
 mkdir -p /gcp/instances/gcp_1/in
 mkdir -p /gcp/applications
