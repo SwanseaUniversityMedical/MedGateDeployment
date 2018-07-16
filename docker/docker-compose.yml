@@ -150,7 +150,8 @@ services:
       - "/gcp/applications:/control/application"
     depends_on:
       - medgate-service
-    command: ["-t","4","-m","20G","-d","/control"]
+    #command: ["-t","4","-m","20G","-d","/control"]
+    command: ["-d","/control"]
     restart: on-failure
 
   nrdagateway:
