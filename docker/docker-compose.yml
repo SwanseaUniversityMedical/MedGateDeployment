@@ -96,7 +96,7 @@ services:
     env_file: ../medgate.config
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - no_proxy=vault,localhost,elasticsearch,tika,postgres
+      #- no_proxy=vault,localhost,elasticsearch,tika,postgres
       - host_ip=${host_ip}
     volumes:
       - "/medgate:/medgate"
