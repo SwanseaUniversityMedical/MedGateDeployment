@@ -14,11 +14,11 @@ stop server `stop.sh`
 
 ### Kibana
 
-http://youIP:5601
+http://yourIP:5601
 
 ### Elasticsearch
 
-http://youIP:9200
+http://yourIP:9200
 
 ## Note
 
