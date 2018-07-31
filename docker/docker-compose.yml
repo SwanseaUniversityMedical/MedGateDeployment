@@ -101,6 +101,7 @@ services:
     volumes:
       - "/medgate:/medgate"
       - "/gcp:/gcp"
+      - "/token:/token"
     networks:
       - esnet
     ports:
