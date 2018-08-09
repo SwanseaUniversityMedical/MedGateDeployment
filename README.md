@@ -1,5 +1,15 @@
 # This is the server installation script to support the MedGATE project
 
+## Docker and Git proxy settings 
+
+1. If docker is living behind a **proxy** server, please apply following changes in https://docs.docker.com/config/daemon/systemd/#httphttps-proxy 
+
+2. For the git, you may consider something like:
+```
+git config --global http.proxy http://proxyUsername:proxyPassword@proxy.server.com:port
+git config --global https.proxy http://proxyUsername:proxyPassword@proxy.server.com:port
+```
+
 ## Get Started
 
 Set credentials for PostgreSQL, FTP, WebDAV and ElasticSearch in `medgate.config` as well as the proxy.
