@@ -2,9 +2,9 @@
 
 ## Docker and Git proxy settings 
 
-1. If docker is living behind a **proxy** server, please apply following changes in https://docs.docker.com/config/daemon/systemd/#httphttps-proxy 
+1. If docker is living behind a **proxy** server, please apply the following changes in https://docs.docker.com/config/daemon/systemd/#httphttps-proxy 
 
-2. For the git, you may consider something like:
+2. For git, you may consider something like:
 ```
 git config --global http.proxy http://proxyUsername:proxyPassword@proxy.server.com:port
 git config --global https.proxy http://proxyUsername:proxyPassword@proxy.server.com:port
@@ -21,6 +21,10 @@ run in console `run.sh`
 run as server `install.sh`
 
 stop server `stop.sh`
+
+### MedGate
+
+http://yourIP:80
 
 ### Kibana
 
