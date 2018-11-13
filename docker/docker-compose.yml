@@ -168,6 +168,16 @@ services:
     depends_on:
       - postgres
     restart: on-failure
+    
+  brat:
+    image: cassj/brat
+    env_file: ../medgate.config
+    ports:
+      - "80:8088"
+    volumes:
+      - "/brat-data:/brat-data"
+      - "/brat-cfg:/brat-cfg"
+    restart: on-failure
 
 volumes:
   esdata:
