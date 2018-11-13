@@ -25,6 +25,10 @@ mkdir -p /gcp/applications
 mkdir -p /gcp/data
 mkdir -p /gcp/output
 
+# create brat data and config directories 
+mkdir -p /bratdata
+mkdir -p /bratcfg
+
 echo '==> Pulling latest image for MedGATE services'
 #remove medgate-service container and pull the latest medgate-service image 
 if [ "$(docker ps -aq -f name='medgate-service')" ]; then
