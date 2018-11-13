@@ -175,8 +175,8 @@ services:
     ports:
       - "80:8088"
     volumes:
-      - "/brat-data:/brat-data"
-      - "/brat-cfg:/brat-cfg"
+      - "/brat-data:/bratdata"
+      - "/brat-cfg:/bratcfg"
     restart: on-failure
 
 volumes:
