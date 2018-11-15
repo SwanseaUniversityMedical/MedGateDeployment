@@ -173,7 +173,7 @@ services:
     image: cassj/brat
     env_file: ../medgate.config
     ports:
-      - "80:8088"
+      - "8088:80"
     volumes:
       - "/brat-data:/bratdata"
       - "/brat-cfg:/bratcfg"
