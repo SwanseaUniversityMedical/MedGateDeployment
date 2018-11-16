@@ -90,6 +90,18 @@ services:
       - "21100-21110:21100-21110"
     restart: on-failure
 
+  webdav_server:
+    image: morrisjobke/webdav
+    container_name: webdavserver
+    volumes:
+      - "/medgate/ingress/nlp:/var/webdav"
+    environment:
+      - USERNAME=nlp
+      - PASSWORD=password123
+    ports:
+      - "999:80"
+    restart: on-failure
+
   medgate-service:
     image: swanseauniversitymedical/medgate-dev:latest
     container_name: medgate-service
