@@ -37,3 +37,5 @@ http://yourIP:9200
 ## Note
 
 gcp-2.8.1 is for test use ONLY. It is **NOT** used in the docker-compose file until the official gcp docker image is released.
+
+Elasticsearch invalid license for 6.1.4. So need to upgrad it to the latest one.
