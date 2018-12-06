@@ -180,6 +180,8 @@ services:
       - "5050:5050"
     depends_on:
       - postgres
+    networks:
+      - esnet
     restart: on-failure
     
   brat:
