@@ -5,13 +5,13 @@ echo '-  MedGATE   -'
 echo '--------------'
 echo ''
 
-export host_ip=$(ip address | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1' | grep -v '172.' )
+# export host_ip=$(ip address | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1' | grep -v '172.' )
 # FOR DEMO, easier
-# export host_ip=localhost
+export host_ip=localhost
 
 # stop all the running services
 echo '==> Stopping any running MedGATE services'
-docker-compose -f ~/MedGateDeployment/docker/docker-compose.yml stop
+docker-compose -f ./docker/docker-compose.yml stop
 
 echo '==> Configuring enviroment'
 # create medgate related directories for initialization 
@@ -39,7 +39,7 @@ if [ "$(docker ps -aq -f name='medgate-service')" ]; then
 fi
 
 echo '==> Building Docker Images'
-docker-compose -f ~/MedGateDeployment/docker/docker-compose.yml up --build -d
+docker-compose -f ./docker/docker-compose.yml up --build -d
 
 clear
 echo '==> Running Docker Images'

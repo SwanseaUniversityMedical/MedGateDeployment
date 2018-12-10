@@ -4,4 +4,4 @@ echo '--------------'
 echo ''
 echo '==> Stopping MedGATE service'
 
-docker-compose -f ~/MedGateDeployment/docker/docker-compose.yml stop
+docker-compose -f ./docker/docker-compose.yml stop
