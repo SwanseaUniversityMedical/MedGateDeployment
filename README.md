@@ -24,11 +24,11 @@ stop server `stop.sh`
 
 ### MedGate
 
-http://yourIP:80
+http://yourIP/
 
 ### Kibana
 
-http://yourIP:5601
+http://yourIP/kibana/
 
 ### Elasticsearch
 
