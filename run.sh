@@ -41,6 +41,6 @@ fi
 echo '==> Building Docker Images'
 docker-compose -f ./docker/docker-compose.yml up --build -d
 
-clear
+ 
 echo '==> Running Docker Images'
 docker ps
