@@ -100,7 +100,7 @@ services:
       - USERNAME=nlp
       - PASSWORD=password123
     ports:
-      - "999:80"
+      - "999:8000"
     restart: on-failure
 
   medgate-service:
@@ -193,6 +193,15 @@ services:
       - "/brat-data:/bratdata"
       - "/brat-cfg:/bratcfg"
     restart: on-failure
+
+  nginx: 
+    image: nginx:latest
+    container_name: nginx_rp
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - 80:80
+      - 443:443
 
 volumes:
   esdata:
