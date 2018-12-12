@@ -42,3 +42,13 @@ docker-compose -f ./docker/docker-compose.yml up --build -d
  
 echo '==> Running Docker Images'
 docker ps
+
+echo ''
+echo 'Medgate at http://<ip>/ '
+echo ''
+echo 'kibana at http://<ip>/kibana/ '
+echo 'webdav at http://<ip>/webdav/ '
+echo 'brat at http://<ip>/brat/ '
+echo 'NRDA Gateway at http://<ip>/nrdagateway/ '
+echo '(note / at the end is required)'
+
