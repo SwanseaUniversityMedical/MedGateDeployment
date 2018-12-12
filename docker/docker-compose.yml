@@ -199,7 +199,7 @@ services:
       - /var/lib/docker/containers/:/var/log/monitor/docker/
     restart: on-failure
     networks:
-      - esnet
+      - backend
     depends_on:
       - elasticsearch
       
@@ -213,7 +213,7 @@ services:
       - /:/hostfs:ro
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
-      - esnet
+      - backend
     depends_on:
       - elasticsearch
     command:
