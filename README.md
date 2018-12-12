@@ -16,11 +16,11 @@ Set credentials for PostgreSQL, FTP, WebDAV and ElasticSearch in `medgate.config
 
 If docker is not installed run `installdocker.sh`
 
-run in console `run.sh`
+run in console `sudo sh run.sh`
 
-run as server `install.sh`
+stop server `sudo sh stop.sh`
 
-stop server `stop.sh`
+remove server 'sudo sh remove.sh'
 
 ### MedGate
 
@@ -30,12 +30,10 @@ http://yourIP/
 
 http://yourIP/kibana/
 
-### Elasticsearch
+Others
 
-http://yourIP:9200
+kibana at http://<ip>/kibana/ 
+webdav at http://<ip>/webdav/ 
+brat at http://<ip>/brat/ 
+NRDA Gateway at http://<ip>/nrdagateway/
 
-## Note
-
-gcp-2.8.1 is for test use ONLY. It is **NOT** used in the docker-compose file until the official gcp docker image is released.
-
-Elasticsearch invalid license for 6.1.4. So need to upgrad it to the latest one.
