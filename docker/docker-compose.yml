@@ -190,7 +190,35 @@ services:
       - 80:80
       - 443:443
     restart: on-failure
-
+    
+  filebeat:
+    build: ./filebeat/
+    container_name: filebeat
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock # "//var/run/docker.sock" for windows, "/var/run/docker.sock" for linux
+      - /var/lib/docker/containers/:/var/log/monitor/docker/
+    restart: on-failure
+    networks:
+      - esnet
+    depends_on:
+      - elasticsearch
+      
+   metricbeat:
+    build: ./metricbeat/
+    container_name: metricbeat
+    restart: unless-stopped
+    volumes:
+      - /proc:/hostfs/proc:ro
+      - /sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro
+      - /:/hostfs:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - esnet
+    depends_on:
+      - elasticsearch
+    command:
+      - "-system.hostfs=/hostfs"
+      
 volumes:
   esdata:
   pgdata:
