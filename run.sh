@@ -5,9 +5,7 @@ echo '-  MedGATE   -'
 echo '--------------'
 echo ''
 
-# export host_ip=$(ip address | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1' | grep -v '172.' )
-# FOR DEMO, easier
-export host_ip=localhost
+export host_ip=0.0.0.0
 
 # stop all the running services
 echo '==> Stopping any running MedGATE services'
