@@ -203,7 +203,7 @@ services:
     depends_on:
       - elasticsearch
       
-   metricbeat:
+  metricbeat:
     build: ./metricbeat/
     container_name: metricbeat
     restart: unless-stopped
