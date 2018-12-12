@@ -3,27 +3,28 @@ version: "3"
 services:
   tika:
     image: logicalspark/docker-tikaserver:latest
-    ports:
-      - "9998:9998"
+    container_name: medgate-tika
+    expose:
+      - "9998"
     networks:
-      - esnet
+      - backend
     restart: on-failure
 
   redis:
     image: redis:4.0.8
-    container_name: redis-server
+    container_name: medgate-redis
 #    command: ["redis-server", "--appendonly", "yes"]
 #    volumes:
 #      - "redisdata:/usr/share/redis/data"
     networks:
-      - esnet
-    ports:
-      - 6379:6379
+      - backend
+    expose:
+      - "6379"
     restart: on-failure
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.5.1
-    container_name: elasticsearch
+    container_name: medgate-elasticsearch
     env_file: ../medgate.config
     environment:
       - discovery.type=single-node
@@ -44,64 +45,67 @@ services:
     volumes:
       - "esdata:/usr/share/elasticsearch/data"
     networks:
-      - esnet
-    ports:
-      - "9200:9200"
-      - "9300:9300"
+      - backend
+    expose:
+      - "9200"
     restart: on-failure
 
   kibana:
     image: docker.elastic.co/kibana/kibana:6.5.1
-    container_name: kibana
+    container_name: medgate-kibana
     environment:
       - elasticsearch.url= http://elasticsearch:9200
       - xpack.monitoring.ui.container.elasticsearch.enabled=true
       - SERVER_BASEPATH=/kibana
     networks:
-      - esnet
-    ports:
-      - "5601:5601"
+      - backend
+    expose:
+      - "5601"
     depends_on:
       - elasticsearch
     #command: ["./wait-for-it.sh", "elasticsearch:9200", "-t 0"]
 
   postgres:
     image: postgres:alpine
-    container_name: postgres
+    container_name: medgate-postgres
     env_file: ../medgate.config
     volumes:
       - "pgdata:/var/lib/postgresql/data"
     networks:
-      - esnet
-    ports:
-      - "5432:5432"
+      - backend
+    expose:
+      - "5432"
     restart: on-failure
 
   ftp_server:
     image: fauria/vsftpd
     env_file: ../medgate.config
-    container_name: ftpserver
+    container_name: medgate-ftpserver
     volumes:
       - "/medgate/ingress:/home/vsftpd"
     environment:
       - PASV_ADDRESS=${host_ip}
       - PASV_MIN_PORT=21100
       - PASV_MAX_PORT=21110
+    networks:
+      - backend
     ports:
       - "21:21"
       - "21100-21110:21100-21110"
     restart: on-failure
 
-  webdav_server:
+  webdav-server:
     image: morrisjobke/webdav
-    container_name: webdavserver
+    container_name: medgate-webdav
     volumes:
       - "/medgate/ingress/nlp:/var/webdav"
     environment:
       - USERNAME=nlp
       - PASSWORD=password123
-    ports:
-      - "999:80"
+    networks:
+      - backend
+    expose:
+      - "80"
     restart: on-failure
 
   medgate-service:
@@ -117,47 +121,18 @@ services:
       - "/gcp:/gcp"
       - "/token:/token"
     networks:
-      - esnet
-    ports:
-      - "90:80"
+      - backend
+    expose:
+      - "80"
     depends_on:
       - postgres
       - elasticsearch
     restart: on-failure
 
 
-  filebeat:
-    build: ./filebeat/
-    container_name: filebeat
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock # "//var/run/docker.sock" for windows, "/var/run/docker.sock" for linux
-      - /var/lib/docker/containers/:/var/log/monitor/docker/
-    restart: on-failure
-    networks:
-      - esnet
-    depends_on:
-      - elasticsearch
-
-
-  metricbeat:
-    build: ./metricbeat/
-    container_name: metricbeat
-    restart: unless-stopped
-    volumes:
-      - /proc:/hostfs/proc:ro
-      - /sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro
-      - /:/hostfs:ro
-      - /var/run/docker.sock:/var/run/docker.sock
-    networks:
-      - esnet
-    depends_on:
-      - elasticsearch
-    command:
-      - "-system.hostfs=/hostfs"
-
   gcp_8.4.1:
     image: swanseauniversitymedical/gcp
-    container_name: gcp_8.4.1
+    container_name: medgate-gcp_8.4.1
     volumes:
       - "/gcp/instances/gcp_1:/control"
       - "/gcp/data:/control/data"
@@ -171,25 +146,34 @@ services:
 
   nrdagateway:
     image: swanseauniversitymedical/nrdagateway-dev:latest
-    ports:
-      - "88:80"
+    container_name: medgate-nrdagateway
+    networks:
+      - backend
+    expose:
+      - "80"
     restart: on-failure
 
   pgadmin:
     image: fenglc/pgadmin4
-    ports:
-      - "5050:5050"
+    container_name: medgate-pgadmin
+    networks:
+      - backend
+    expose:
+      - "5050"
     depends_on:
       - postgres
     networks:
-      - esnet
+      - backend
     restart: on-failure
     
   brat:
     image: cassj/brat
+    container_name: medgate-brat
     env_file: ../medgate.config
-    ports:
-      - "8088:80"
+    networks:
+      - backend
+    expose:
+      - "80"
     volumes:
       - "/brat-data:/bratdata"
       - "/brat-cfg:/bratcfg"
@@ -197,12 +181,15 @@ services:
 
   nginx: 
     image: nginx:latest
-    container_name: nginx_rp
+    container_name: medgate-nginx
     volumes:
       - ../nginx.conf:/etc/nginx/nginx.conf
+    networks:
+      - backend
     ports:
       - 80:80
       - 443:443
+    restart: on-failure
 
 volumes:
   esdata:
@@ -210,5 +197,4 @@ volumes:
 #  redisdata:
 
 networks:
-  esnet:
-    #driver: custom-driver-1
+  backend:
