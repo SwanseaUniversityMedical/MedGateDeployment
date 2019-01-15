@@ -158,8 +158,8 @@ services:
     container_name: medgate-pgadmin
     networks:
       - backend
-    expose:
-      - "5050"
+    ports:
+      - "5050:5050"
     depends_on:
       - postgres
     networks:
