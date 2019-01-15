@@ -156,8 +156,6 @@ services:
   pgadmin:
     image: fenglc/pgadmin4
     container_name: medgate-pgadmin
-    networks:
-      - backend
     ports:
       - "5050:5050"
     depends_on:
