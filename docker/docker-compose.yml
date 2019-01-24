@@ -82,7 +82,8 @@ services:
     env_file: ../medgate.config
     container_name: medgate-ftpserver
     volumes:
-      - "/medgate/ingress:/home/vsftpd"
+      - "/medgate/ingress:/home/vsftpd/ingress"
+      - "/medgate/output:/home/vsftpd/output"
     environment:
       - PASV_ADDRESS=${host_ip}
       - PASV_MIN_PORT=21100
@@ -98,7 +99,8 @@ services:
     image: morrisjobke/webdav
     container_name: medgate-webdav
     volumes:
-      - "/medgate/ingress/nlp:/var/webdav"
+      - "/medgate/ingress/nlp:/var/webdav/ingress"
+      - "/medgate/output:/var/webdav/output"
     environment:
       - USERNAME=nlp
       - PASSWORD=password123
