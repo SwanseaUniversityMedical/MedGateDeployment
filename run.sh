@@ -31,13 +31,13 @@ echo '==> Pulling latest image for MedGATE services'
 #remove medgate-service container and pull the latest medgate-service image 
 if [ "$(docker ps -aq -f name='medgate-service')" ]; then
     # remove existing medgate-service container
-    docker rm -f medgate-service
+    docker rm -f medgate-service medgate-webdav
     # pull the latest medgate-service image
     docker pull swanseauniversitymedical/medgate-dev:latest
 fi
 
 echo '==> Building Docker Images'
-docker-compose -f ./docker/docker-compose.yml up --build -d
+docker-compose -f ./docker/docker-compose.yml up --no-recreate -d
 
  
 echo '==> Running Docker Images'
