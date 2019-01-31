@@ -133,7 +133,7 @@ services:
 
 
   gcp_8.4.1:
-    image: swanseauniversitymedical/gcp
+    image: swanseauniversitymedical/gcp:8.5
     container_name: medgate-gcp_8.4.1
     volumes:
       - "/gcp/instances/gcp_1:/control"
