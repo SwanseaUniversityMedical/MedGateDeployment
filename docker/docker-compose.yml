@@ -132,9 +132,9 @@ services:
     restart: on-failure
 
 
-  gcp_8.4.1:
+  gcp_8.5:
     image: swanseauniversitymedical/gcp:8.5
-    container_name: medgate-gcp_8.4.1
+    container_name: medgate-gcp_8.5
     volumes:
       - "/gcp/instances/gcp_1:/control"
       - "/gcp/data:/control/data"
