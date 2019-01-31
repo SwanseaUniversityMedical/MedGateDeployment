@@ -85,7 +85,7 @@ services:
       - "/medgate/ingress:/home/vsftpd/ingress"
       - "/medgate/output:/home/vsftpd/output"
     environment:
-      - PASV_ADDRESS=${host_ip}
+      - PASV_ADDRESS=${ftp_host_ip}
       - PASV_MIN_PORT=21100
       - PASV_MAX_PORT=21110
     networks:
