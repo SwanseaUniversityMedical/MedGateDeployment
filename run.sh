@@ -40,7 +40,7 @@ fi
 echo '==> Building Docker Images'
 docker-compose -f ./docker/docker-compose.yml up --no-recreate -d
 
- 
+
 echo '==> Running Docker Images'
 docker ps
 
