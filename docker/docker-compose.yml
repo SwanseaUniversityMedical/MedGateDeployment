@@ -117,7 +117,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       #- no_proxy=vault,localhost,elasticsearch,tika,postgres
-      - host_ip=${host_ip}
+      - host_ip=${ftp_host_ip}
     volumes:
       - "/medgate:/medgate"
       - "/gcp:/gcp"
