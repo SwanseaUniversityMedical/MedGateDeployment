@@ -20,7 +20,9 @@ run in console `sudo sh run.sh`
 
 stop server `sudo sh stop.sh`
 
-remove server 'sudo sh remove.sh'
+remove server `sudo sh remove.sh`
+
+reset server `sudo sh reset.sh`, note this will purge all associated data including your uploaded documents.
 
 ### MedGate
 

@@ -117,7 +117,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       #- no_proxy=vault,localhost,elasticsearch,tika,postgres
-      - host_ip=${host_ip}
+      - host_ip=${ftp_host_ip}
     volumes:
       - "/medgate:/medgate"
       - "/gcp:/gcp"
@@ -132,9 +132,9 @@ services:
     restart: on-failure
 
 
-  gcp_8.4.1:
-    image: swanseauniversitymedical/gcp
-    container_name: medgate-gcp_8.4.1
+  gcp_8.5:
+    image: swanseauniversitymedical/gcp:8.5
+    container_name: medgate-gcp_8.5
     volumes:
       - "/gcp/instances/gcp_1:/control"
       - "/gcp/data:/control/data"
@@ -175,8 +175,8 @@ services:
     expose:
       - "80"
     volumes:
-      - "/brat-data:/bratdata"
-      - "/brat-cfg:/bratcfg"
+      - "/brat-data:/brat-data"
+      - "/brat-cfg:/brat-cfg"
     restart: on-failure
 
   nginx: 
