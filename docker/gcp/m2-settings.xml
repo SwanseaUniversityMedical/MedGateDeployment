@@ -4,7 +4,7 @@
                       https://maven.apache.org/xsd/settings-1.0.0.xsd">
 
   <localRepository>/config/m2-repo</localRepository>
-  <proxies>
+  <!-- <proxies>
     <proxy>
       <id>myproxy</id>
       <active>true</active>
@@ -12,5 +12,5 @@
       <host>192.168.10.15</host>
       <port>8080</port>
     </proxy>
-  </proxies>
+  </proxies> -->
 </settings>
