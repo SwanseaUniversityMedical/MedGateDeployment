@@ -82,8 +82,8 @@ services:
     env_file: ../medgate.config
     container_name: medgate-ftpserver
     volumes:
-      - "/medgate/ingress:/home/vsftpd/ingress"
-      - "/medgate/output:/home/vsftpd/output"
+      - C://Users/currentuser/medgate/ingress:/home/vsftpd/ingress
+      - C://Users/currentuser/medgate/output:/home/vsftpd/output
     environment:
       - PASV_ADDRESS=${ftp_host_ip}
       - PASV_MIN_PORT=21100
@@ -99,8 +99,8 @@ services:
     image: morrisjobke/webdav
     container_name: medgate-webdav
     volumes:
-      - "/medgate/ingress/nlp:/var/webdav/ingress"
-      - "/medgate/output:/var/webdav/output"
+      - C://Users/currentuser/medgate/ingress:/var/webdav/ingress
+      - C://Users/currentuser/medgate/output:/var/webdav/output
     environment:
       - USERNAME=nlp
       - PASSWORD=password123
@@ -119,9 +119,9 @@ services:
       #- no_proxy=vault,localhost,elasticsearch,tika,postgres
       - host_ip=${ftp_host_ip}
     volumes:
-      - "/medgate:/medgate"
-      - "/gcp:/gcp"
-      - "/token:/token"
+      - C://Users/currentuser/medgate:/medgate
+      - C://Users/currentuser/gcp:/gcp
+      - C://Users/currentuser/token:/token
     networks:
       - backend
     expose:
@@ -133,13 +133,14 @@ services:
 
 
   gcp_8.5:
-    image: swanseauniversitymedical/gcp:8.5
+    #image: swanseauniversitymedical/gcp:8.5
+    build: ./gcp/
     container_name: medgate-gcp_8.5
     volumes:
-      - "/gcp/instances/gcp_1:/control"
-      - "/gcp/data:/control/data"
-      - "/gcp/output:/control/output"
-      - "/gcp/applications:/control/application"
+      - C://Users/currentuser/gcp/instances/gcp_1:/control
+      - C://Users/currentuser/gcp/data:/control/data
+      - C://Users/currentuser/gcp/output:/control/output
+      - C://Users/currentuser/gcp/applications:/control/application
     depends_on:
       - medgate-service
     #command: ["-t","4","-m","20G","-d","/control"]
@@ -175,15 +176,15 @@ services:
     expose:
       - "80"
     volumes:
-      - "/brat-data:/brat-data"
-      - "/brat-cfg:/brat-cfg"
+      - C://Users/currentuser/brat-data:/brat-data"
+      - C://Users/currentuser/brat-cfg:/brat-cfg"
     restart: on-failure
 
   nginx: 
     image: nginx:latest
     container_name: medgate-nginx
     volumes:
-      - ../nginx.conf:/etc/nginx/nginx.conf
+      -  ../nginx.conf:/etc/nginx/nginx.conf
     networks:
       - backend
     ports:
@@ -191,33 +192,33 @@ services:
       - 443:443
     restart: on-failure
     
-  filebeat:
-    build: ./filebeat/
-    container_name: filebeat
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock # "//var/run/docker.sock" for windows, "/var/run/docker.sock" for linux
-      - /var/lib/docker/containers/:/var/log/monitor/docker/
-    restart: on-failure
-    networks:
-      - backend
-    depends_on:
-      - elasticsearch
+  # filebeat:
+  #   build: ./filebeat/
+  #   container_name: filebeat
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock # "//var/run/docker.sock" for windows, "/var/run/docker.sock" for linux
+  #     - /var/lib/docker/containers/:/var/log/monitor/docker/
+  #   restart: on-failure
+  #   networks:
+  #     - backend
+  #   depends_on:
+  #     - elasticsearch
       
-  metricbeat:
-    build: ./metricbeat/
-    container_name: metricbeat
-    restart: unless-stopped
-    volumes:
-      - /proc:/hostfs/proc:ro
-      - /sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro
-      - /:/hostfs:ro
-      - /var/run/docker.sock:/var/run/docker.sock
-    networks:
-      - backend
-    depends_on:
-      - elasticsearch
-    command:
-      - "-system.hostfs=/hostfs"
+  # metricbeat:
+  #   build: ./metricbeat/
+  #   container_name: metricbeat
+  #   restart: unless-stopped
+  #   volumes:
+  #     - /proc:/hostfs/proc:ro
+  #     - /sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro
+  #     - /:/hostfs:ro
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #   networks:
+  #     - backend
+  #   depends_on:
+  #     - elasticsearch
+  #   command:
+  #     - "-system.hostfs=/hostfs"
       
 volumes:
   esdata:
