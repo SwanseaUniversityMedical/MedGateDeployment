@@ -80,3 +80,5 @@ echo 'webdav at http://<ip>/webdav/ '
 echo 'brat at http://<ip>/brat/ '
 echo 'NRDA Gateway at http://<ip>/nrdagateway/ '
 echo '(note / at the end is required)'
+
+echo 'FTP at' ${ftp_host_ip}
