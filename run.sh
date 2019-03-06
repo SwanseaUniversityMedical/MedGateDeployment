@@ -43,6 +43,7 @@ docker-compose -f ./docker/docker-compose.yml stop
 echo '==> Configuring enviroment'
 # create medgate related directories for initialization
 mkdir -p /medgate/ingress
+mkdir -p /medgate/output
 mkdir -p /medgate/archive
 mkdir -p /medgate/hl7
 
