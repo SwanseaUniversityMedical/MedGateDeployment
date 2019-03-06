@@ -227,13 +227,13 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: /c/Users/MedGateUser/medgate/ingress
+      device: /medgate/ingress
   data_out:
     driver: local
     driver_opts:
       type: none
       o: bind
-      device: /c/Users/MedGateUser/medgate/output
+      device: /medgate/output
 #  redisdata:
 
 networks:
