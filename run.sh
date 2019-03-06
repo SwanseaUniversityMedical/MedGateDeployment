@@ -33,6 +33,9 @@ if [ -z $ftp_host_ip ]; then
     echo $ftp_host_ip
 fi
 
+# get FTP username for mounting correct volumes in docker-compose
+FTP_USER=$(grep 'FTP_USER' medgate.config) && export MEDGATE_FTP_USER=${FTP_USER//'FTP_USER='/}
+
 # stop all the running services
 echo '==> Stopping any running MedGATE services'
 docker-compose -f ./docker/docker-compose.yml stop
