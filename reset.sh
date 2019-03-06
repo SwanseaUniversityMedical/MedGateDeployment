@@ -1,3 +1,5 @@
+#!/bin/bash
+
 echo '--------------'
 echo '-  MedGATE   -'
 echo '--------------'
@@ -10,7 +12,32 @@ reset() {
   echo 'Removing data volumes'
   docker volume rm docker_esdata docker_pgdata 2>/dev/null
   echo 'Removing local files'
-  rm /gcp /medgate /brat-cfg /brat-data -rf
+  case "$OSTYPE" in
+  linux*)
+    echo "OS: LINUX"
+
+    rm /gcp /medgate /brat-cfg /brat-data -rf
+
+    ;;
+
+  msys*)
+    echo "OS: WINDOWS"
+
+    rm /c/Users/MedGateUser/gcp /c/Users/MedGateUser/medgate /c/Users/MedGateUser/brat-cfg /c/Users/MedGateUser/brat-data -rf
+
+    ;;
+
+  darwin*)
+    echo "OS: OSX"
+    exit 1
+    ;;
+
+  *)
+    echo "Unsupported OS: $OSTYPE"
+    exit 1
+    ;;
+  esac
+
   sh run.sh
 }
 

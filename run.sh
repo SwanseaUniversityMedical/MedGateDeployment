@@ -30,7 +30,6 @@ darwin*)
 esac
 
 if [ -z $ftp_host_ip ]; then
-    export ftp_host_ip=127.0.0.1
     echo $ftp_host_ip
 fi
 
