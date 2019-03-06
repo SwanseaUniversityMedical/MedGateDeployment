@@ -21,27 +21,27 @@ git config --global https.proxy http://proxyUsername:proxyPassword@proxy.server.
 
 ### Linux
 
-Via Terminal
+Bash Via Terminal
 
-- Start MedGate Services `sudo sh run.sh`.
+- Start MedGate Services `sudo bash run.sh`.
 
-- Stop MedGate Services `sudo sh stop.sh`.
+- Stop MedGate Services `sudo bash stop.sh`.
 
-- Remove MedGate Services `sudo sh remove.sh`, your data will **not** be purged.
+- Remove MedGate Services `sudo bash remove.sh`, your data will **not** be purged.
 
-- Reset MedGate Services `sudo sh reset.sh`, note this **will purge** all associated data including the uploaded documents.
+- Reset MedGate Services `sudo bash reset.sh`, note this will purge all associated data including the uploaded documents.
 
 ### Windows
 
 Start Git Bash as Administrator:
 
-- Start MedGate Services `sh run.sh`.
+- Start MedGate Services `bash run.sh`.
 
-- Stop MedGate Services `sh stop.sh`.
+- Stop MedGate Services `bash stop.sh`.
 
-- Remove MedGate Services `sh remove.sh`, your data will **not** be purged.
+- Remove MedGate Services `bash remove.sh`, your data will **not** be purged.
 
-- Reset MedGate Services `sh reset.sh`, note this **will purge** all associated data including the uploaded documents.
+- Reset MedGate Services `bash reset.sh`, note this **will purge** all associated data including the uploaded documents.
 
 ### MedGate
 
