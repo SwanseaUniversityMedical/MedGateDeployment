@@ -82,8 +82,8 @@ services:
     env_file: ../medgate.config
     container_name: medgate-ftpserver
     volumes:
-      - C://Users/currentuser/medgate/ingress:/home/vsftpd/ingress
-      - C://Users/currentuser/medgate/output:/home/vsftpd/output
+      - C://Users/MedGateUser/medgate/ingress:/home/vsftpd/ingress
+      - C://Users/MedGateUser/medgate/output:/home/vsftpd/output
     environment:
       - PASV_ADDRESS=${ftp_host_ip}
       - PASV_MIN_PORT=21100
@@ -99,8 +99,8 @@ services:
     image: morrisjobke/webdav
     container_name: medgate-webdav
     volumes:
-      - C://Users/currentuser/medgate/ingress:/var/webdav/ingress
-      - C://Users/currentuser/medgate/output:/var/webdav/output
+      - C://Users/MedGateUser/medgate/ingress:/var/webdav/ingress
+      - C://Users/MedGateUser/medgate/output:/var/webdav/output
     environment:
       - USERNAME=nlp
       - PASSWORD=password123
@@ -119,9 +119,9 @@ services:
       #- no_proxy=vault,localhost,elasticsearch,tika,postgres
       - host_ip=${ftp_host_ip}
     volumes:
-      - C://Users/currentuser/medgate:/medgate
-      - C://Users/currentuser/gcp:/gcp
-      - C://Users/currentuser/token:/token
+      - C://Users/MedGateUser/medgate:/medgate
+      - C://Users/MedGateUser/gcp:/gcp
+      - C://Users/MedGateUser/token:/token
     networks:
       - backend
     expose:
@@ -137,10 +137,10 @@ services:
     build: ./gcp/
     container_name: medgate-gcp_8.5
     volumes:
-      - C://Users/currentuser/gcp/instances/gcp_1:/control
-      - C://Users/currentuser/gcp/data:/control/data
-      - C://Users/currentuser/gcp/output:/control/output
-      - C://Users/currentuser/gcp/applications:/control/application
+      - C://Users/MedGateUser/gcp/instances/gcp_1:/control
+      - C://Users/MedGateUser/gcp/data:/control/data
+      - C://Users/MedGateUser/gcp/output:/control/output
+      - C://Users/MedGateUser/gcp/applications:/control/application
     depends_on:
       - medgate-service
     #command: ["-t","4","-m","20G","-d","/control"]
@@ -176,8 +176,8 @@ services:
     expose:
       - "80"
     volumes:
-      - C://Users/currentuser/brat-data:/brat-data"
-      - C://Users/currentuser/brat-cfg:/brat-cfg"
+      - C://Users/MedGateUser/brat-data:/brat-data"
+      - C://Users/MedGateUser/brat-cfg:/brat-cfg"
     restart: on-failure
 
   nginx: 
