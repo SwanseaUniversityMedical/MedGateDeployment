@@ -82,8 +82,8 @@ services:
     env_file: ../medgate.config
     container_name: medgate-ftpserver
     volumes:
-      - data_in:/home/vsftpd/${MEDGATE_FTP_USER}/ingress
-      - data_out:/home/vsftpd/${MEDGATE_FTP_USER}/output
+      - /medgate/ingress:/home/vsftpd/${MEDGATE_FTP_USER}/ingress
+      - /medgate/output:/home/vsftpd/${MEDGATE_FTP_USER}/output
     environment:
       - PASV_ADDRESS=${ftp_host_ip}
       - PASV_MIN_PORT=21100
@@ -99,8 +99,8 @@ services:
     image: morrisjobke/webdav
     container_name: medgate-webdav
     volumes:
-      - data_in:/var/webdav/ingress
-      - data_out:/var/webdav/output
+      - /medgate/ingress:/var/webdav/ingress
+      - /medgate/output:/var/webdav/output
     environment:
       - USERNAME=nlp
       - PASSWORD=password123
@@ -222,18 +222,6 @@ services:
 volumes:
   esdata:
   pgdata:
-  data_in: 
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: /medgate/ingress
-  data_out:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: /medgate/output
 #  redisdata:
 
 networks:

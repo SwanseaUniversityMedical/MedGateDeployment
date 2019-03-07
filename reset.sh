@@ -11,7 +11,7 @@ reset() {
   bash remove.sh
 
   echo 'Removing data volumes'
-  docker volume rm docker_esdata docker_pgdata docker_data_in docker_data_out 2>/dev/null
+  docker volume rm docker_esdata docker_pgdata 2>/dev/null
 
   echo 'Removing networks'
   docker network rm docker_backend 2>/dev/null
