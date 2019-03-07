@@ -14,7 +14,11 @@ linux*)
 
 msys*)
     echo "OS: WINDOWS"
-    export ftp_host_ip=$(ipconfig | grep IPv4 | grep -Eo '([0-9]*\.){3}[0-9]*' | grep 192.168)
+
+    gateway=$(ipconfig | grep Gateway | grep -Eo '([0-9]{0,3}\.){2}')
+
+    export ftp_host_ip=$(ipconfig | grep IPv4 | grep $gateway | grep -Eo '([0-9]*\.){3}[0-9]*')
+
     cp -f ./docker/docker-compose.win.yml ./docker/docker-compose.yml
     ;;
 
