@@ -82,8 +82,8 @@ services:
     env_file: ../medgate.config
     container_name: medgate-ftpserver
     volumes:
-      - C://Users/MedGateUser/medgate/ingress:/home/vsftpd/${MEDGATE_FTP_USER}/ingress
-      - C://Users/MedGateUser/medgate/output:/home/vsftpd/${MEDGATE_FTP_USER}/output
+      - C://Users/CURRENTUSER/medgate/medgate/ingress:/home/vsftpd/${MEDGATE_FTP_USER}/ingress
+      - C://Users/CURRENTUSER/medgate/medgate/output:/home/vsftpd/${MEDGATE_FTP_USER}/output
     environment:
       - PASV_ADDRESS=${ftp_host_ip}
       - PASV_MIN_PORT=21100
@@ -99,8 +99,8 @@ services:
     image: morrisjobke/webdav
     container_name: medgate-webdav
     volumes:
-      - C://Users/MedGateUser/medgate/ingress:/var/webdav/ingress
-      - C://Users/MedGateUser/medgate/output:/var/webdav/output
+      - C://Users/CURRENTUSER/medgate/medgate/ingress:/var/webdav/ingress
+      - C://Users/CURRENTUSER/medgate/medgate/output:/var/webdav/output
     environment:
       - USERNAME=nlp
       - PASSWORD=password123
@@ -119,9 +119,9 @@ services:
       #- no_proxy=vault,localhost,elasticsearch,tika,postgres
       - host_ip=${ftp_host_ip}
     volumes:
-      - C://Users/MedGateUser/medgate:/medgate
-      - C://Users/MedGateUser/gcp:/gcp
-      - C://Users/MedGateUser/token:/token
+      - C://Users/CURRENTUSER/medgate/medgate:/medgate
+      - C://Users/CURRENTUSER/gcp:/gcp
+      - C://Users/CURRENTUSER/token:/token
     networks:
       - backend
     expose:
@@ -137,10 +137,10 @@ services:
     build: ./gcp/
     container_name: medgate-gcp_8.5
     volumes:
-      - C://Users/MedGateUser/gcp/instances/gcp_1:/control
-      - C://Users/MedGateUser/gcp/data:/control/data
-      - C://Users/MedGateUser/gcp/output:/control/output
-      - C://Users/MedGateUser/gcp/applications:/control/application
+      - C://Users/CURRENTUSER/gcp/instances/gcp_1:/control
+      - C://Users/CURRENTUSER/gcp/data:/control/data
+      - C://Users/CURRENTUSER/gcp/output:/control/output
+      - C://Users/CURRENTUSER/gcp/applications:/control/application
     depends_on:
       - medgate-service
     #command: ["-t","4","-m","20G","-d","/control"]
@@ -176,8 +176,8 @@ services:
     expose:
       - "80"
     volumes:
-      - C://Users/MedGateUser/brat-data:/brat-data"
-      - C://Users/MedGateUser/brat-cfg:/brat-cfg"
+      - C://Users/CURRENTUSER/brat-data:/brat-data"
+      - C://Users/CURRENTUSER/brat-cfg:/brat-cfg"
     restart: on-failure
 
   nginx: 
@@ -188,8 +188,10 @@ services:
     networks:
       - backend
     ports:
-      - 80:80
+      - 81:80
       - 443:443
+    depends_on:
+      - medgate-service
     restart: on-failure
     
   # filebeat:

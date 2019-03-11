@@ -27,8 +27,8 @@ reset() {
 
   msys*)
     echo "OS: WINDOWS"
-
-    rm /c/Users/MedGateUser/gcp /c/Users/MedGateUser/medgate /c/Users/MedGateUser/brat-cfg /c/Users/MedGateUser/brat-data -rf
+    USER="$(whoami)"
+    rm /c/Users/$USER/medgate -rf
 
     ;;
 

@@ -20,6 +20,10 @@ msys*)
     export ftp_host_ip=$(ipconfig | grep IPv4 | grep $gateway | grep -Eo '([0-9]*\.){3}[0-9]*')
 
     cp -f ./docker/docker-compose.win.yml ./docker/docker-compose.yml
+
+    USER="$(whoami)"
+
+    sed -i "s/CURRENTUSER/$USER/g" ./docker/docker-compose.yml
     ;;
 
 darwin*)
