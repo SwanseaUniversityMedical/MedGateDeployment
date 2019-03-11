@@ -120,8 +120,8 @@ services:
       - host_ip=${ftp_host_ip}
     volumes:
       - C://Users/CURRENTUSER/medgate/medgate:/medgate
-      - C://Users/CURRENTUSER/gcp:/gcp
-      - C://Users/CURRENTUSER/token:/token
+      - C://Users/CURRENTUSER/medgate/gcp:/gcp
+      - C://Users/CURRENTUSER/medgate/token:/token
     networks:
       - backend
     expose:
@@ -137,10 +137,10 @@ services:
     build: ./gcp/
     container_name: medgate-gcp_8.5
     volumes:
-      - C://Users/CURRENTUSER/gcp/instances/gcp_1:/control
-      - C://Users/CURRENTUSER/gcp/data:/control/data
-      - C://Users/CURRENTUSER/gcp/output:/control/output
-      - C://Users/CURRENTUSER/gcp/applications:/control/application
+      - C://Users/CURRENTUSER/medgate/gcp/instances/gcp_1:/control
+      - C://Users/CURRENTUSER/medgate/gcp/data:/control/data
+      - C://Users/CURRENTUSER/medgate/gcp/output:/control/output
+      - C://Users/CURRENTUSER/medgate/gcp/applications:/control/application
     depends_on:
       - medgate-service
     #command: ["-t","4","-m","20G","-d","/control"]
@@ -176,8 +176,8 @@ services:
     expose:
       - "80"
     volumes:
-      - C://Users/CURRENTUSER/brat-data:/brat-data"
-      - C://Users/CURRENTUSER/brat-cfg:/brat-cfg"
+      - C://Users/CURRENTUSER/medgate/brat-data:/brat-data"
+      - C://Users/CURRENTUSER/medgate/brat-cfg:/brat-cfg"
     restart: on-failure
 
   nginx: 
