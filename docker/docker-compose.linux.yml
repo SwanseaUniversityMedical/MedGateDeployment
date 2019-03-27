@@ -11,7 +11,7 @@ services:
     restart: on-failure
 
   redis:
-    image: redis:4.0.8
+    image: redis:alpine
     container_name: medgate-redis
 #    command: ["redis-server", "--appendonly", "yes"]
 #    volumes:
