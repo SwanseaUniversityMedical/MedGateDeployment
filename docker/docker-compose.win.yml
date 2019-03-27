@@ -111,7 +111,7 @@ services:
     restart: on-failure
 
   medgate-service:
-    image: swanseauniversitymedical/medgate-dev:latest
+    image: swanseauniversity/medgate:latest
     container_name: medgate-service
     env_file: ../medgate.config
     environment:
