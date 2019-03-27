@@ -82,10 +82,10 @@ services:
     env_file: ../medgate.config
     container_name: medgate-ftpserver
     volumes:
-      - "/medgate/ingress:/home/vsftpd/ingress"
-      - "/medgate/output:/home/vsftpd/output"
+      - /medgate/ingress:/home/vsftpd/${MEDGATE_FTP_USER}/ingress
+      - /medgate/output:/home/vsftpd/${MEDGATE_FTP_USER}/output
     environment:
-      - PASV_ADDRESS=${host_ip}
+      - PASV_ADDRESS=${ftp_host_ip}
       - PASV_MIN_PORT=21100
       - PASV_MAX_PORT=21110
     networks:
@@ -99,8 +99,8 @@ services:
     image: morrisjobke/webdav
     container_name: medgate-webdav
     volumes:
-      - "/medgate/ingress/nlp:/var/webdav/ingress"
-      - "/medgate/output:/var/webdav/output"
+      - /medgate/ingress:/var/webdav/ingress
+      - /medgate/output:/var/webdav/output
     environment:
       - USERNAME=nlp
       - PASSWORD=password123
@@ -111,21 +111,21 @@ services:
     restart: on-failure
 
   medgate-service:
-    image: swanseauniversitymedical/medgate-dev:latest
+    image: swanseauniversity/medgate:latest
     container_name: medgate-service
     env_file: ../medgate.config
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       #- no_proxy=vault,localhost,elasticsearch,tika,postgres
-      - host_ip=${host_ip}
+      - host_ip=${ftp_host_ip}
     volumes:
       - "/medgate:/medgate"
       - "/gcp:/gcp"
       - "/token:/token"
     networks:
       - backend
-    expose:
-      - "80"
+    ports:
+      - "81:80"
     depends_on:
       - postgres
       - elasticsearch
@@ -175,8 +175,8 @@ services:
     expose:
       - "80"
     volumes:
-      - "/brat-data:/bratdata"
-      - "/brat-cfg:/bratcfg"
+      - "/brat-data:/brat-data"
+      - "/brat-cfg:/brat-cfg"
     restart: on-failure
 
   nginx: 
@@ -191,33 +191,33 @@ services:
       - 443:443
     restart: on-failure
     
-  filebeat:
-    build: ./filebeat/
-    container_name: filebeat
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock # "//var/run/docker.sock" for windows, "/var/run/docker.sock" for linux
-      - /var/lib/docker/containers/:/var/log/monitor/docker/
-    restart: on-failure
-    networks:
-      - backend
-    depends_on:
-      - elasticsearch
+  # filebeat:
+  #   build: ./filebeat/
+  #   container_name: filebeat
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock # "//var/run/docker.sock" for windows, "/var/run/docker.sock" for linux
+  #     - /var/lib/docker/containers/:/var/log/monitor/docker/
+  #   restart: on-failure
+  #   networks:
+  #     - backend
+  #   depends_on:
+  #     - elasticsearch
       
-  metricbeat:
-    build: ./metricbeat/
-    container_name: metricbeat
-    restart: unless-stopped
-    volumes:
-      - /proc:/hostfs/proc:ro
-      - /sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro
-      - /:/hostfs:ro
-      - /var/run/docker.sock:/var/run/docker.sock
-    networks:
-      - backend
-    depends_on:
-      - elasticsearch
-    command:
-      - "-system.hostfs=/hostfs"
+  # metricbeat:
+  #   build: ./metricbeat/
+  #   container_name: metricbeat
+  #   restart: unless-stopped
+  #   volumes:
+  #     - /proc:/hostfs/proc:ro
+  #     - /sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro
+  #     - /:/hostfs:ro
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #   networks:
+  #     - backend
+  #   depends_on:
+  #     - elasticsearch
+  #   command:
+  #     - "-system.hostfs=/hostfs"
       
 volumes:
   esdata:
